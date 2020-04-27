@@ -56,4 +56,3 @@ public class BookController {
         bookRepository.deleteById(id);
     }
 }
-
