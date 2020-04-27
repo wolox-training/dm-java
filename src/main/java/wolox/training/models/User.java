@@ -1,5 +1,7 @@
 package wolox.training.models;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
@@ -17,12 +19,14 @@ import wolox.training.exceptions.users.BookAlreadyOwnedException;
 
 @Entity
 @Table(name = "users")
+@ApiModel(description = "Users from the Java training")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     @Column(nullable = false)
+    @ApiModelProperty(notes = "The username that represent user. Equivalent to nick")
     private String username;
 
     @Column(nullable = false)
