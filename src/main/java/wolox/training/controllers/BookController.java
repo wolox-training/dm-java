@@ -5,8 +5,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import java.util.Arrays;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,43 +26,45 @@ import wolox.training.repositories.BookRepository;
 @RequestMapping("/api/books")
 @Api
 public class BookController {
-  @Autowired
-  private BookRepository bookRepository;
 
-  @GetMapping("/title/{bookTitle}")
-  @ApiOperation(value = "Giving a Book Title, return the book", response = Book.class)
-  @ApiResponses(value = {
-          @ApiResponse(code = 200, message = "Successfully retrieved book"),
-          @ApiResponse(code = 404, message = "Book not found")
-  })
-  public Book findByTitle(@ApiParam(value = "bookTitle to find the book", required = true) @PathVariable String bookTitle) {
-    Book book = bookRepository.findByTitle(bookTitle)
-        .orElseThrow(() -> new BookNotFoundException("Book with title '"+bookTitle+"' not found"));
-    return book;
-  }
+    @Autowired
+    private BookRepository bookRepository;
 
-  @PostMapping
-  @ResponseStatus(HttpStatus.CREATED)
-  public Book create(@RequestBody Book book){
-    return bookRepository.save(book);
-  }
-
-  @PutMapping("/{id}")
-  public Book patch(@RequestBody Book book, @PathVariable Long id) {
-    if (book.getId() != id) {
-      throw new BookIdMissMatchException();
+    @GetMapping("/title/{bookTitle}")
+    @ApiOperation(value = "Giving a Book Title, return the book", response = Book.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved book"),
+            @ApiResponse(code = 404, message = "Book not found")
+    })
+    public Book findByTitle(
+            @ApiParam(value = "bookTitle to find the book", required = true) @PathVariable String bookTitle) {
+        Book book = bookRepository.findByTitle(bookTitle)
+                .orElseThrow(() -> new BookNotFoundException(
+                        "Book with title '" + bookTitle + "' not found"));
+        return book;
     }
-    bookRepository.findById(id)
-        .orElseThrow(() -> new BookNotFoundException("Book with ID "+id+" not found"));
-    return bookRepository.save(book);
-  }
 
-  @DeleteMapping("/{id}")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void delete(@PathVariable Long id) {
-    bookRepository.findById(id)
-        .orElseThrow(() -> new BookNotFoundException("Book with ID "+id+" not found"));
-    bookRepository.deleteById(id);
-  }
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Book create(@RequestBody Book book) {
+        return bookRepository.save(book);
+    }
+
+    @PutMapping("/{id}")
+    public Book patch(@RequestBody Book book, @PathVariable Long id) {
+        if (book.getId() != id) {
+            throw new BookIdMissMatchException();
+        }
+        bookRepository.findById(id)
+                .orElseThrow(() -> new BookNotFoundException("Book with ID " + id + " not found"));
+        return bookRepository.save(book);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        bookRepository.findById(id)
+                .orElseThrow(() -> new BookNotFoundException("Book with ID " + id + " not found"));
+        bookRepository.deleteById(id);
+    }
 }
-

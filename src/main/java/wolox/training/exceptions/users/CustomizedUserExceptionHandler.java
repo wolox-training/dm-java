@@ -15,15 +15,27 @@ public class CustomizedUserExceptionHandler extends ResponseEntityExceptionHandl
     private final String USER_ORIGIN = "user_controller";
 
     @ExceptionHandler(UserNotFoundException.class)
-    public final ResponseEntity<ExceptionResponse> handleUserNotFound(UserNotFoundException exception) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(exception.getMessage(), USER_ORIGIN);
+    public final ResponseEntity<ExceptionResponse> handleUserNotFound(
+            UserNotFoundException exception) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(exception.getMessage(),
+                USER_ORIGIN);
         return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(BookAlreadyOwnedException.class)
-    public final ResponseEntity<ExceptionResponse> handleBookAlreadyOwned(BookAlreadyOwnedException exception) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(exception.getMessage(), USER_ORIGIN);
+    public final ResponseEntity<ExceptionResponse> handleBookAlreadyOwned(
+            BookAlreadyOwnedException exception) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(exception.getMessage(),
+                USER_ORIGIN);
         return new ResponseEntity<>(exceptionResponse, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(UserIdMissMatchException.class)
+    public final ResponseEntity<ExceptionResponse> handleUserIdMissMatch(
+            UserIdMissMatchException exception) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(exception.getMessage(),
+                USER_ORIGIN);
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
 }
