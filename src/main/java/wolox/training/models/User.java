@@ -9,8 +9,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import wolox.training.exceptions.users.BookAlreadyOwnedException;
@@ -18,6 +16,7 @@ import wolox.training.exceptions.users.BookAlreadyOwnedException;
 @Entity
 @Table(name = "users")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -32,9 +31,6 @@ public class User {
     private LocalDate birthday;
 
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "book_user",
-            joinColumns = @JoinColumn(name = "book_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
     private List<Book> books;
 
     public User() {
@@ -43,10 +39,6 @@ public class User {
 
     public long getId() {
         return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getUsername() {
@@ -82,19 +74,22 @@ public class User {
     }
 
     public void addBook(Book newBook) {
-        checkIfAlreadyExists(newBook);
+        exceptionIfHasBook(newBook);
         this.books.add(newBook);
     }
 
     public void addBooks(List<Book> books) {
-        books.forEach(this::checkIfAlreadyExists);
+        books.forEach(this::exceptionIfHasBook);
         this.books.addAll(books);
     }
 
-    private void checkIfAlreadyExists(Book newBook) {
-        Book bookFound = this.books.stream().filter(book -> book.getId() == newBook.getId()).findAny().orElse(null);
-        if (bookFound != null) {
-            throw new BookAlreadyOwnedException("Book with id "+newBook.getId()+" already exists on User");
-        }
+    private void exceptionIfHasBook(Book newBook) {
+        this.books.stream()
+                .filter(book -> book.getId() == newBook.getId())
+                .findAny()
+                .ifPresent(s -> {
+                    throw new BookAlreadyOwnedException(
+                            "Book with id " + newBook.getId() + " already exists on User");
+                });
     }
 }

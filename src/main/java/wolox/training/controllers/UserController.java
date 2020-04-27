@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import wolox.training.exceptions.books.BookNotFoundException;
+import wolox.training.exceptions.users.UserIdMissMatchException;
 import wolox.training.exceptions.users.UserNotFoundException;
 import wolox.training.models.Book;
 import wolox.training.models.User;
@@ -49,19 +49,26 @@ public class UserController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable long id) {
+        userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found"));
         userRepository.deleteById(id);
     }
 
     @PutMapping("/{id}")
     public User update(@RequestBody User user, @PathVariable long id) {
+        if (user.getId() != id) {
+            throw new UserIdMissMatchException();
+        }
+        userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found"));
         return userRepository.save(user);
     }
 
     @PostMapping("/{id}/book")
     public User addBook(@RequestBody List<Book> books, @PathVariable long id) {
-        return userRepository.findById(id).map(user -> {
-            user.addBooks(books);
-            return userRepository.save(user);
-        }).orElseThrow(() -> new UserNotFoundException("User with id "+id+" not found"));
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found"));
+        user.addBooks(books);
+        return userRepository.save(user);
     }
 }
