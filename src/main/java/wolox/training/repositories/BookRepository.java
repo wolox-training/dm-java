@@ -6,5 +6,6 @@ import org.springframework.data.repository.CrudRepository;
 import wolox.training.models.Book;
 
 public interface BookRepository extends CrudRepository<Book, Long> {
-  Optional<Book> findByTitle(String title);
+
+    Optional<Book> findByTitle(String title);
 }

@@ -13,17 +13,21 @@ import wolox.training.exceptions.books.BookNotFoundException;
 @RestController
 public class CustomizedExceptionHandler extends ResponseEntityExceptionHandler {
 
-  private final String BOOK_ORIGIN = "book_controller";
+    private final String BOOK_ORIGIN = "book_controller";
 
-  @ExceptionHandler(BookNotFoundException.class)
-  public final ResponseEntity<ExceptionResponse> handleBookNotFound(BookNotFoundException exception) {
-    ExceptionResponse exceptionResponse = new ExceptionResponse(exception.getMessage(), BOOK_ORIGIN);
-    return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
-  }
+    @ExceptionHandler(BookNotFoundException.class)
+    public final ResponseEntity<ExceptionResponse> handleBookNotFound(
+            BookNotFoundException exception) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(exception.getMessage(),
+                BOOK_ORIGIN);
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
+    }
 
-  @ExceptionHandler(BookIdMissMatchException.class)
-  public final ResponseEntity<ExceptionResponse> handleBookIdMissMatch(BookIdMissMatchException exception) {
-    ExceptionResponse exceptionResponse = new ExceptionResponse(exception.getMessage(), BOOK_ORIGIN);
-    return new ResponseEntity<>(exceptionResponse, HttpStatus.UNPROCESSABLE_ENTITY);
-  }
+    @ExceptionHandler(BookIdMissMatchException.class)
+    public final ResponseEntity<ExceptionResponse> handleBookIdMissMatch(
+            BookIdMissMatchException exception) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(exception.getMessage(),
+                BOOK_ORIGIN);
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
 }
