@@ -2,6 +2,7 @@ package wolox.training.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import wolox.training.exceptions.books.BookNotFoundException;
+import wolox.training.exceptions.SchemaValidatorExceptionHandler;
 import wolox.training.exceptions.users.UserNotFoundException;
 import wolox.training.models.Book;
 import wolox.training.models.User;
@@ -21,7 +22,7 @@ import wolox.training.repositories.UserRepository;
 
 @RestController
 @RequestMapping("/api/users")
-public class UserController {
+public class UserController extends SchemaValidatorExceptionHandler {
 
     @Autowired
     private UserRepository userRepository;
@@ -35,7 +36,7 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public User create(@RequestBody User user) {
+    public User create(@Valid @RequestBody User user) {
         return userRepository.save(user);
     }
 
@@ -62,6 +63,6 @@ public class UserController {
         return userRepository.findById(id).map(user -> {
             user.addBooks(books);
             return userRepository.save(user);
-        }).orElseThrow(() -> new UserNotFoundException("User with id "+id+" not found"));
+        }).orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found"));
     }
 }
