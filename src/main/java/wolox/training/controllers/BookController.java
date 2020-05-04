@@ -70,12 +70,3 @@ public class BookController extends SchemaValidatorExceptionHandler {
         bookRepository.deleteById(id);
     }
 }
-
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) {
-        bookRepository.findById(id)
-                .orElseThrow(() -> new BookNotFoundException("Book with ID " + id + " not found"));
-        bookRepository.deleteById(id);
-    }
-}
