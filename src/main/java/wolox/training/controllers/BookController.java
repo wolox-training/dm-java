@@ -53,7 +53,7 @@ public class BookController extends SchemaValidatorExceptionHandler {
     }
 
     @PutMapping("/{id}")
-    public Book patch(@RequestBody Book book, @PathVariable Long id) {
+    public Book patch(@Valid @RequestBody Book book, @PathVariable Long id) {
         if (book.getId() != id) {
             throw new BookIdMissMatchException();
         }
@@ -71,3 +71,11 @@ public class BookController extends SchemaValidatorExceptionHandler {
     }
 }
 
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        bookRepository.findById(id)
+                .orElseThrow(() -> new BookNotFoundException("Book with ID " + id + " not found"));
+        bookRepository.deleteById(id);
+    }
+}

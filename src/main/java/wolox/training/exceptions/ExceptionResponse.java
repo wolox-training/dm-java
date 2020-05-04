@@ -21,11 +21,6 @@ public class ExceptionResponse {
     }
 
     public ExceptionResponse(List<ErrorDetail> errors, String origin) {
-//        List<ErrorDetail> errors = new ArrayList<>();
-//        validationErrors.getFieldErrors().forEach(error -> {
-//            errors.add(new ErrorDetail(error.getField(), error.getRejectedValue(),
-//                    error.getDefaultMessage()));
-//        });
         this.errors = errors;
         this.timestamp = new Date();
         this.origin = origin;
