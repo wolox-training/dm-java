@@ -13,6 +13,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Pattern;
+import org.springframework.format.annotation.DateTimeFormat;
 import wolox.training.exceptions.users.BookAlreadyOwnedException;
 
 @Entity
@@ -25,13 +29,18 @@ public class User {
     private long id;
 
     @Column(nullable = false)
+    @NotNull(message = "username is required")
     @ApiModelProperty(notes = "The username that represent user. Equivalent to nick")
     private String username;
 
     @Column(nullable = false)
+    @NotNull(message = "name is required")
     private String name;
 
     @Column(nullable = false)
+    @NotNull(message = "birthday is required")
+
+    @Past(message = "Date input is invalid for a birth date.")
     private LocalDate birthday;
 
     @ManyToMany(cascade = CascadeType.ALL)

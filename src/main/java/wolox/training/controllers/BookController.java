@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import wolox.training.exceptions.SchemaValidatorExceptionHandler;
 import wolox.training.exceptions.books.BookIdMissMatchException;
 import wolox.training.exceptions.books.BookNotFoundException;
 import wolox.training.models.Book;
@@ -25,7 +27,7 @@ import wolox.training.repositories.BookRepository;
 @RestController
 @RequestMapping("/api/books")
 @Api
-public class BookController {
+public class BookController extends SchemaValidatorExceptionHandler {
 
     @Autowired
     private BookRepository bookRepository;
@@ -46,12 +48,12 @@ public class BookController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Book create(@RequestBody Book book) {
+    public Book create(@Valid @RequestBody Book book) {
         return bookRepository.save(book);
     }
 
     @PutMapping("/{id}")
-    public Book patch(@RequestBody Book book, @PathVariable Long id) {
+    public Book patch(@Valid @RequestBody Book book, @PathVariable Long id) {
         if (book.getId() != id) {
             throw new BookIdMissMatchException();
         }

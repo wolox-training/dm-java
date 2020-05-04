@@ -9,6 +9,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @ApiModel(description = "Books from the Java training")
@@ -18,51 +22,51 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    @Column()
     @ApiModelProperty(notes = "The book genre: can be anything")
+    @NotNull(message = "genre is required")
     private String genre;
 
-    @Column(nullable = false)
     @ApiModelProperty(notes = "Author from the book")
+    @Column(nullable = false)
+    @NotNull(message = "author is required")
     private String author;
 
     @Column(nullable = false)
+    @NotBlank(message = "image can't be blank")
     private String image;
 
     @Column(nullable = false)
+    @NotNull(message = "title is required")
     private String title;
 
     @Column(nullable = false)
+    @NotNull(message = "subtitle is required")
     private String subtitle;
 
     @Column(nullable = false)
+    @NotNull(message = "publisher is required")
     private String publisher;
 
     @Column(nullable = false)
+    @NotNull(message = "year is required")
+    @Min(value = 1888, message = "year must be equal or between 1888 and 2077")
+    @Max(value = 2077, message = "year must be equal or between 1888 and 2077")
     private String year;
 
     @Column(nullable = false)
+    @NotNull(message = "pages is required")
+    @Min(value = 1, message = "pages must be greater than 0")
     private String pages;
 
     @Column(nullable = false)
+    @NotNull(message = "isbn is required")
     private String isbn;
 
     @ManyToMany(mappedBy = "books")
     private List<User> users;
 
     public Book() {
-    }
-
-    public Book(String genre, String author, String image, String title, String subtitle,
-            String publisher, String year, String pages, String isbn) {
-        this.genre = genre;
-        this.author = author;
-        this.image = image;
-        this.title = title;
-        this.subtitle = subtitle;
-        this.publisher = publisher;
-        this.year = year;
-        this.pages = pages;
-        this.isbn = isbn;
     }
 
     public long getId() {
