@@ -1,5 +1,9 @@
 package wolox.training.controllers;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +25,18 @@ import wolox.training.repositories.UserRepository;
 
 @RestController
 @RequestMapping("/api/users")
+@Api
 public class UserController {
 
     @Autowired
     private UserRepository userRepository;
 
     @GetMapping("/username/{username}")
+    @ApiOperation(value = "Giving an username, return the user", response = User.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved user"),
+            @ApiResponse(code = 404, message = "User not found")
+    })
     public User findByUsername(@PathVariable String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException(
