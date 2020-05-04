@@ -1,5 +1,7 @@
 package wolox.training.models;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,15 +11,18 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
 @Entity
+@ApiModel(description = "Books from the Java training")
 public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    @ApiModelProperty(notes = "The book genre: can be anything")
     private String genre;
 
     @Column(nullable = false)
+    @ApiModelProperty(notes = "Author from the book")
     private String author;
 
     @Column(nullable = false)
